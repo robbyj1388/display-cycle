@@ -6,7 +6,7 @@ RESOLUTION=1920x1080
 if [ "$1" ]; then
   echo "Extending Displays--------------------------------------------------------"
   for display in displays; do
-    xrandr --output HDMI-1 --auto --right-of eDP-1
+    xrandr --output display --auto --right-of eDP-1
   done
   echo "Done!"
 else
