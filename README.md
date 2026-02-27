@@ -3,7 +3,7 @@ display-cycle is a simple Bash script that uses xrandr to quickly switch between
 
 It’s designed for users who frequently connect to external monitors and want a fast, no-frills way to change display configurations from the terminal.
 
-##Features
+## Features
 
 Toggle between Extend Displays and Duplicate Displays
 
@@ -13,7 +13,7 @@ Uses native Linux display management via xrandr
 
 Ideal for laptops connected to external monitors or projectors
 
-##Requirements
+## Requirements
 
 Linux with X11
 
@@ -33,23 +33,23 @@ sudo pacman -S xorg-xrandr
 sudo dnf install xrandr
 ```
 
-##Usage
+## Usage
 
-###Extend Displays
+### Extend Displays
 
 Extends your desktop across connected monitors:
 ```
 display-cycle extend
 ```
 
-###Duplicate Displays
+### Duplicate Displays
 
 Mirrors your primary display to other connected monitors:
 ```
 display-cycle
 ```
 
-##Installation
+## Installation
 
 Clone or download this repository.
 
