@@ -1,16 +1,57 @@
-#!/bin/sh
-# Array of display name
-displays=$(xrandr | grep " connected " | awk '{ print$1 }')
-echo $displays
-RESOLUTION=1920x1080
-if [ "$1" ]; then
-  echo "Extending Displays--------------------------------------------------------"
-  for display in displays; do
-    xrandr --output display --auto --right-of eDP-1
-  done
-  echo "Done!"
-else
-  echo "Duplicating Displays--------------------------------------------------------"
-  xrandr --listmonitors | sed -n '1!p' | sed -e 's/\s[0-9].*\s\([a-zA-Z0-9\-]*\)$/\1/g' | xargs -n 1 -- bash -xc 'xrandr --output $0 --mode '$RESOLUTION' --pos 0x0 --rotate normal'
-  echo "Done!"
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Ensure user is running X11
+if [ "${XDG_SESSION_TYPE:-}" != "x11" ]; then
+    echo "Error: This script requires x11."
+    exit 1
 fi
+
+# Get connected displays
+mapfile -t DISPLAYS < <(xrandr --query | awk '/ connected/ {print $1}')
+
+if [ "${#DISPLAYS[@]}" -lt 2 ]; then
+    echo "Only one display detected. Nothing to toggle."
+    exit 0
+fi
+
+PRIMARY="${DISPLAYS[0]}"
+
+# Detect current mode
+# If multiple monitors share position 0x0 then assume duplicate
+DUPLICATE_COUNT=$(xrandr --query | grep " connected" | grep "+0+0" | wc -l)
+
+if [ "$DUPLICATE_COUNT" -gt 1 ]; then
+    CURRENT_MODE="duplicate"
+else
+    CURRENT_MODE="extend"
+fi
+
+echo "Current mode: $CURRENT_MODE"
+
+# Toggle Mode
+if [ "$CURRENT_MODE" = "duplicate" ]; then
+    echo "Switching to EXTENDED mode..."
+
+    xrandr --output "$PRIMARY" --auto --primary
+    PREV="$PRIMARY"
+
+    for ((i=1; i<${#DISPLAYS[@]}; i++)); do
+        CURRENT="${DISPLAYS[$i]}"
+        xrandr --output "$CURRENT" --auto --right-of "$PREV"
+        PREV="$CURRENT"
+    done
+
+else
+    echo "Switching to DUPLICATE mode..."
+
+    xrandr --output "$PRIMARY" --auto --primary
+
+    for ((i=1; i<${#DISPLAYS[@]}; i++)); do
+        CURRENT="${DISPLAYS[$i]}"
+        xrandr --output "$CURRENT" --auto --same-as "$PRIMARY"
+    done
+fi
+
+echo "Done!"

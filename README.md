@@ -1,7 +1,9 @@
 # display-cycle
-display-cycle is a simple Bash script that uses xrandr to quickly switch between extended and duplicated (mirrored) display modes on Linux systems running X11.
+display-cycle is a simple Bash script that uses xrandr to automatically toggle between Extended and Duplicated display modes on Linux systems running **ONLY X11**.
 
-It’s designed for users who frequently connect to external monitors and want a fast, no-frills way to change display configurations from the terminal.
+It detects your current layout and switches to the opposite mode — no arguments required.
+
+Designed for users who frequently connect laptops to external monitors, docks, or projectors and want a fast, no-terminal solution.
 
 ## Features
 
@@ -35,19 +37,16 @@ sudo dnf install xrandr
 
 ## Usage
 
-### Extend Displays
-
-Extends your desktop across connected monitors:
-```
-display-cycle extend
-```
-
-### Duplicate Displays
-
-Mirrors your primary display to other connected monitors:
+Simply run:
 ```
 display-cycle
 ```
+| Current Mode | Running display-cycle Will |
+| :---: | :---: |
+| Extended | Switch to Duplicate |
+| Duplicate | Switch to Extended |
+
+No flags or arguments needed.
 
 ## Installation
 
@@ -57,6 +56,6 @@ Make the script executable:
 
 `chmod +x display-cycle`
 
-(Optional) Move it to a directory in your $PATH:
+**(Optional)** Move it to a directory in your $PATH:
 
 `sudo mv display-cycle /usr/local/bin/`
